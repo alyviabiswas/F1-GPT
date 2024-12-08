@@ -1,8 +1,8 @@
-import {DataAPIClient} from "@datastax/astra-db-ts"
-import {PuppeteerWebBaseLoader} from "langchain/document_loaders/web/puppeteer"
+import { DataAPIClient } from "@datastax/astra-db-ts"
+import { PuppeteerWebBaseLoader } from "@langchain/community/document_loaders/web/puppeteer"
 import OpenAI from "openai"
 
-import {RecursiveCharacterTextSplitter} from "langchain/text_splitter"
+import { RecursiveCharacterTextSplitter } from "langchain/text_splitter"
 
 import "dotenv/config"
 
@@ -47,7 +47,7 @@ const createCollection = async (similarityMetric: SimilarityMetric = "dot_produc
 
 const loadSampleData = async () => {
     const collection = await db.collection(ASTRA_DB_COLLECTION)
-    for await ( const uel of f1Data) {
+    for await ( const url of f1Data) {
         const content = await scrapePage(url)
         const chunks = await splitter.splitText(content)
         for await (const chunk of chunks){
@@ -82,7 +82,7 @@ const scrapePage = async (url: string) => {
             return result
         }
     })
-    return ( await loader.scrape())?.repalce(/<[^>]*>?/gm, ' ')
+    return ( await loader.scrape())?.replace(/<[^>]*>?/gm, ' ')
 }
 
 createCollection().then(() => loadSampleData())
